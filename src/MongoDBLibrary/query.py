@@ -36,8 +36,8 @@ class Query(object):
 
     def get_mongodb_collections(self, dbName):
         """
-        Returns a list of all of the collections currently on the MongoDB 
-        server you are connected to.
+        Returns a list of all of the collections for the database you
+        passed in on the connected MongoDB server.
 
         Usage is:
         | @{allCollections} | Get MongoDB Collections | DBName |
@@ -49,7 +49,6 @@ class Query(object):
             print "dbName is [%s]" % dbName
             print "dbName is [%s]" % type(dbName)
             db = self._dbconnection['%s' % (dbName,)]
-            #db = self._dbconnection['osmdb']
             allCollections = db.collection_names()
             return allCollections
         finally :
