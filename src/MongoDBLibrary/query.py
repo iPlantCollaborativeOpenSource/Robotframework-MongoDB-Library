@@ -33,3 +33,25 @@ class Query(object):
         finally :
             if cur :
                 self._dbconnection.end_request() 
+
+    def get_mongodb_collections(self, dbName):
+        """
+        Returns a list of all of the collections currently on the MongoDB 
+        server you are connected to.
+
+        Usage is:
+        | @{allCollections} | Get MongoDB Collections | DBName |
+        | Log Many | @{allCollections} |
+        """
+        cur = None
+        try:
+            dbName = str(dbName)
+            print "dbName is [%s]" % dbName
+            print "dbName is [%s]" % type(dbName)
+            db = self._dbconnection['%s' % (dbName,)]
+            #db = self._dbconnection['osmdb']
+            allCollections = db.collection_names()
+            return allCollections
+        finally :
+            if cur :
+                self._dbconnection.end_request() 
