@@ -1,0 +1,5 @@
+setup.py
+src/MongoDBLibrary/__init__.py
+src/MongoDBLibrary/assertion.py
+src/MongoDBLibrary/connection_manager.py
+src/MongoDBLibrary/query.py
