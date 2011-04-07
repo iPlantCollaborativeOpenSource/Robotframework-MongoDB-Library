@@ -46,11 +46,80 @@ class Query(object):
         cur = None
         try:
             dbName = str(dbName)
-            print "dbName is [%s]" % dbName
-            print "dbName is [%s]" % type(dbName)
+            #print "dbName is [%s]" % dbName
+            #print "dbName is [%s]" % type(dbName)
             db = self._dbconnection['%s' % (dbName,)]
             allCollections = db.collection_names()
             return allCollections
         finally :
             if cur :
                 self._dbconnection.end_request() 
+
+    def drop_mongodb_database(self, dbDelName):
+        """
+        Deletes the database passed in from the MongoDB server if it exists.
+        If the database does not exist, no errors are thrown.
+
+        Usage is:
+        | Drop MongoDB Database | myDB |
+        """
+        cur = None
+        try:
+            dbDelName = str(dbDelName)
+            #print "dbDelName is [%s]" % dbDelName
+            #print "dbDelName is [%s]" % type(dbDelName)
+            #allResults = self._dbconnection.drop_database('%s' % (dbDelName))
+            #return allResults
+            self._dbconnection.drop_database('%s' % (dbDelName))
+        finally :
+            if cur :
+                self._dbconnection.end_request() 
+
+    def drop_mongodb_collection(self, dbName, dbCollName):
+        """
+        Deletes the named collection passed in from the database named.
+        If the collection does not exist, no errors are thrown.
+
+        Usage is:
+        | Drop MongoDB Collection | myDB | CollectionName |
+        """
+        cur = None
+        try:
+            dbName = str(dbName)
+            print "dbName is     [%s]" % dbName
+            print "dbName is     [%s]" % type(dbName)
+            print "dbCollName is [%s]" % dbCollName
+            print "dbCollName is [%s]" % type(dbCollName)
+            #allResults = self._dbconnection.drop_database('%s' % (dbDelName))
+            #return allResults
+            db = self._dbconnection['%s' % (dbName,)]
+            db.drop_collection('%s' % (dbCollName))
+        finally :
+            if cur :
+                self._dbconnection.end_request() 
+
+    def validate_mongodb_collection(self, dbName, dbCollName):
+        """
+        Returns a string of validation info. Raises CollectionInvalid if 
+        validation fails.
+
+        Usage is:
+        | ${allResults} | Validate MongoDB Collection | DBName | CollectionName |
+        | Log | ${allResults} |
+        """
+        cur = None
+        try:
+            dbName = str(dbName)
+            dbCollName = str(dbCollName)
+            print "dbName is     [%s]" % dbName
+            print "dbName is     [%s]" % type(dbName)
+            print "dbCollName is [%s]" % dbCollName
+            print "dbCollName is [%s]" % type(dbCollName)
+            db = self._dbconnection['%s' % (dbName,)]
+            allResults = db.validate_collection('%s' % dbCollName)
+            return allResults
+        finally :
+            if cur :
+                self._dbconnection.end_request() 
+
+
