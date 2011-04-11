@@ -25,6 +25,7 @@ class Query(object):
         Usage is:
         | @{allDBs} | Get Mongodb Databases |
         | Log Many | @{allDBs} |
+        | Should Contain | ${allDBs} | DBName |
         """
         cur = None
         try:
@@ -42,6 +43,7 @@ class Query(object):
         Usage is:
         | @{allCollections} | Get MongoDB Collections | DBName |
         | Log Many | @{allCollections} |
+        | Should Contain | ${allCollections} | CollName |
         """
         cur = None
         try:
@@ -62,6 +64,8 @@ class Query(object):
 
         Usage is:
         | Drop MongoDB Database | myDB |
+        | @{allDBs} | Get MongoDB Collections | DBName |
+        | Should Not Contain | ${allDBs} | DBName |
         """
         cur = None
         try:
@@ -82,6 +86,8 @@ class Query(object):
 
         Usage is:
         | Drop MongoDB Collection | myDB | CollectionName |
+        | @{allCollections} | Get MongoDB Collections | myDB |
+        | Should Not Contain | ${allCollections} | CollectionName |
         """
         cur = None
         try:
