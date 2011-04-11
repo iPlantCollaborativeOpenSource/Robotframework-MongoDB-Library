@@ -128,4 +128,29 @@ class Query(object):
             if cur :
                 self._dbconnection.end_request() 
 
+    def get_mongodb_collection_count(self, dbName, dbCollName):
+        """
+        Returns the number records for the collection specified.
+
+        Usage is:
+        | ${allResults} | Get MongoDB Collection Count | DBName | CollectionName |
+        | Log | ${allResults} |
+        """
+        cur = None
+        try:
+            dbName = str(dbName)
+            dbCollName = str(dbCollName)
+            print "dbName is     [%s]" % dbName
+            print "dbName is     [%s]" % type(dbName)
+            print "dbCollName is [%s]" % dbCollName
+            print "dbCollName is [%s]" % type(dbCollName)
+            db = self._dbconnection['%s' % (dbName,)]
+            coll = db['%s' % (dbCollName)]
+            print "coll is       [%s]" % coll
+            count = coll.count()
+            return count
+        finally :
+            if cur :
+                self._dbconnection.end_request() 
+
 
