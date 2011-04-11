@@ -64,8 +64,8 @@ class Query(object):
 
         Usage is:
         | Drop MongoDB Database | myDB |
-        | @{allDBs} | Get MongoDB Collections | DBName |
-        | Should Not Contain | ${allDBs} | DBName |
+        | @{allDBs} | Get MongoDB Collections | myDB |
+        | Should Not Contain | ${allDBs} | myDB |
         """
         cur = None
         try:
