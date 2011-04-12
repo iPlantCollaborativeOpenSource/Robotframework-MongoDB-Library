@@ -12,6 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import json
+
 class Query(object):
     """
     Query handles all the querying done by the Database Library. 
@@ -153,4 +155,81 @@ class Query(object):
             if cur :
                 self._dbconnection.end_request() 
 
+    def save_mongodb_records(self, dbName, dbCollName, recordJSON):
+        """
+        If to_save already has an "_id" then an update() (upsert) operation is 
+        performed and any existing document with that "_id" is overwritten. 
+        Otherwise an insert() operation is performed. In this case if manipulate 
+        is True an "_id" will be added to to_save and this method returns the 
+        "_id" of the saved document.
+
+        Usage is:
+        | @{allResults} | Save MongoDB Records | DBName | CollectionName | JSON |
+        | Log Many | @{allResults} |
+        """
+        cur = None
+        try:
+            dbName = str(dbName)
+            dbCollName = str(dbCollName)
+            #recordJSON = str(recordJSON)
+            print "dbName is     [%s]" % dbName
+            print "dbName is     [%s]" % type(dbName)
+            print "dbCollName is [%s]" % dbCollName
+            print "dbCollName is [%s]" % type(dbCollName)
+            print "recordJSON is [%s]" % recordJSON
+            print "recordJSON is [%s]" % type(recordJSON)
+            db = self._dbconnection['%s' % (dbName,)]
+            coll = db['%s' % (dbCollName)]
+            print "coll is       [%s]" % coll
+            allResults = coll.save('%s' % (recordJSON,))
+            return allResults
+        finally :
+            if cur :
+                self._dbconnection.end_request() 
+
+    #def retrieve_mongodb_records(self, dbName, dbCollName, recordJSON):
+    def retrieve_mongodb_records(self, dbName, dbCollName):
+        """
+        If to_save already has an "_id" then an update() (upsert) operation is 
+        performed and any existing document with that "_id" is overwritten. 
+        Otherwise an insert() operation is performed. In this case if manipulate 
+        is True an "_id" will be added to to_save and this method returns the 
+        "_id" of the saved document.
+
+        Usage is:
+        | @{allResults} | Retrieve MongoDB Records | DBName | CollectionName | JSON |
+        | Log Many | @{allResults} |
+        """
+        cur = None
+        resultsList = list
+        try:
+            dbName = str(dbName)
+            dbCollName = str(dbCollName)
+            #recordJSON = str(recordJSON)
+            print "dbName is     [%s]" % dbName
+            print "dbName is     [%s]" % type(dbName)
+            print "dbCollName is [%s]" % dbCollName
+            print "dbCollName is [%s]" % type(dbCollName)
+            #print "recordJSON is [%s]" % recordJSON
+            #print "recordJSON is [%s]" % type(recordJSON)
+            db = self._dbconnection['%s' % (dbName,)]
+            coll = db['%s' % (dbCollName)]
+            print "coll is       [%s]" % coll
+            #allResults = coll.find('%s' % (recordJSON,))
+            allResults = coll.find()
+            print "Printing records"
+            for d in allResults:
+                print d
+                print type(d)
+                d = list(d)
+                resultsList.append(d)
+                print "resultsList is %s" % resultsList
+            print "Done printing records"
+            print allResults
+            return relustsList
+            #return json.JSONEncoder().encode(allResults)
+            #return jsonRecords
+        finally :
+            if cur :
+                self._dbconnection.end_request() 
 
