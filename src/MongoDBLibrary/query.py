@@ -94,12 +94,10 @@ class Query(object):
         cur = None
         try:
             dbName = str(dbName)
-            print "dbName is     [%s]" % dbName
-            print "dbName is     [%s]" % type(dbName)
-            print "dbCollName is [%s]" % dbCollName
-            print "dbCollName is [%s]" % type(dbCollName)
-            #allResults = self._dbconnection.drop_database('%s' % (dbDelName))
-            #return allResults
+            #print "dbName is     [%s]" % dbName
+            #print "dbName is     [%s]" % type(dbName)
+            #print "dbCollName is [%s]" % dbCollName
+            #print "dbCollName is [%s]" % type(dbCollName)
             db = self._dbconnection['%s' % (dbName,)]
             db.drop_collection('%s' % (dbCollName))
         finally :
@@ -119,10 +117,10 @@ class Query(object):
         try:
             dbName = str(dbName)
             dbCollName = str(dbCollName)
-            print "dbName is     [%s]" % dbName
-            print "dbName is     [%s]" % type(dbName)
-            print "dbCollName is [%s]" % dbCollName
-            print "dbCollName is [%s]" % type(dbCollName)
+            #print "dbName is     [%s]" % dbName
+            #print "dbName is     [%s]" % type(dbName)
+            #print "dbCollName is [%s]" % dbCollName
+            #print "dbCollName is [%s]" % type(dbCollName)
             db = self._dbconnection['%s' % (dbName,)]
             allResults = db.validate_collection('%s' % dbCollName)
             return allResults
@@ -142,13 +140,13 @@ class Query(object):
         try:
             dbName = str(dbName)
             dbCollName = str(dbCollName)
-            print "dbName is     [%s]" % dbName
-            print "dbName is     [%s]" % type(dbName)
-            print "dbCollName is [%s]" % dbCollName
-            print "dbCollName is [%s]" % type(dbCollName)
+            #print "dbName is     [%s]" % dbName
+            #print "dbName is     [%s]" % type(dbName)
+            #print "dbCollName is [%s]" % dbCollName
+            #print "dbCollName is [%s]" % type(dbCollName)
             db = self._dbconnection['%s' % (dbName,)]
             coll = db['%s' % (dbCollName)]
-            print "coll is       [%s]" % coll
+            #print "coll is       [%s]" % coll
             count = coll.count()
             return count
         finally :
