@@ -168,18 +168,19 @@ class Query(object):
         cur = None
         try:
             dbName = str(dbName)
+            print "dbName is     [ %s ]" % dbName
+            print "dbName is     [ %s ]" % type(dbName)
             dbCollName = str(dbCollName)
-            #recordJSON = str(recordJSON)
-            print "dbName is     [%s]" % dbName
-            print "dbName is     [%s]" % type(dbName)
-            print "dbCollName is [%s]" % dbCollName
-            print "dbCollName is [%s]" % type(dbCollName)
-            print "recordJSON is [%s]" % recordJSON
-            print "recordJSON is [%s]" % type(recordJSON)
+            print "dbCollName is [ %s ]" % dbCollName
+            print "dbCollName is [ %s ]" % type(dbCollName)
+            print "recordJSON is [ %s ]" % recordJSON
+            print "recordJSON is [ %s ]" % type(recordJSON)
+            recordJSON = dict(json.loads(recordJSON))
+            print "recordJSON is [ %s ]" % recordJSON
+            print "recordJSON is [ %s ]" % type(recordJSON)
             db = self._dbconnection['%s' % (dbName,)]
             coll = db['%s' % (dbCollName)]
-            print "coll is       [%s]" % coll
-            allResults = coll.save('%s' % (recordJSON,))
+            allResults = coll.save(recordJSON)
             return allResults
         finally :
             if cur :
@@ -202,7 +203,6 @@ class Query(object):
             coll = db['%s' % (dbCollName)]
             for d in coll.find():
                 results = '%s%s' % (results, d.items())
-            print "Done printing records"
             return results
         finally :
             if cur :
@@ -218,54 +218,24 @@ class Query(object):
         | Log | ${allResults} |
         """
         cur = None
-        #resultsList = list
         results = ''
         try:
             dbName = str(dbName)
             dbCollName = str(dbCollName)
-            #recordJSON = str(recordJSON)
-            #recordJSON = json.loads(recordJSON)
-            print "dbName is     [%s]" % dbName
+            recordJSON = dict(json.loads(recordJSON))
+            #print "dbName is     [ %s ]" % dbName
             #print "dbName is     [%s]" % type(dbName)
-            print "dbCollName is [%s]" % dbCollName
+            #print "dbCollName is [ %s ]" % dbCollName
             #print "dbCollName is [%s]" % type(dbCollName)
-            #print "recordJSON is [%s]" % recordJSON
-            #print "recordJSON is [%s]" % type(recordJSON)
+            #print "recordJSON is [ %s ]" % recordJSON
+            #print "recordJSON is [ %s ]" % type(recordJSON)
             db = self._dbconnection['%s' % (dbName,)]
             coll = db['%s' % (dbCollName)]
-            print "coll is       [%s]" % coll
-            #allResults = coll.find('%s' % (recordJSON,))
-            #allResults = coll.find()
-            print "Printing records"
-            for d in coll.find():
-                #print "d is       [%s]" % d
-                #print "d type is [%s]" % type(d)
-                #print "list(d) is [%s]" % list(d)
-                #print json.dumps(d)
+            #print "coll is       [ %s ]" % coll
+            #print "type of coll is [ %s ]" % type(coll)
+            for d in coll.find(recordJSON):
                 results = '%s%s' % (results, d.items())
-                #print "results is [%s]" % results
-                #resultsList = resultsList.append(results)
-                #return d
-                #print "d decoded is [%s]" % json.JSONDecoder(d)
-                #resultsList = resultsList.append(json.JSONDecoder(d))
-            #for d in allResults:
-            #    print "d is       [%s]" % d
-            #    print "d type is [%s]" % type(d)
-            #    #d = list(d)
-            #    print "list(d) is [%s]" % list(d)
-            #    resultsList.append(list(d))
-            #    #print "resultsList is %s" % resultsList
-            #print "results is [%s]" % results
-            print "Done printing records"
-            #resultsList = list(allResults)
-            #print "allResults is [%s]" % allResults
-            #print "type allResults is [%s]" % type(allResults)
-            #print "resultsList is [%s]" % resultsList
-            #print "type allResults is [%s]" % type(allResults)
-            #return resultsList
             return results
-            #return json.JSONEncoder().encode(allResults)
-            #return jsonRecords
         finally :
             if cur :
                 self._dbconnection.end_request() 
