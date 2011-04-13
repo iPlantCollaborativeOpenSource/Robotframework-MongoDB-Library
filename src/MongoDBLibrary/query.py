@@ -185,46 +185,85 @@ class Query(object):
             if cur :
                 self._dbconnection.end_request() 
 
-    #def retrieve_mongodb_records(self, dbName, dbCollName, recordJSON):
-    def retrieve_mongodb_records(self, dbName, dbCollName):
+    def retrieve_all_mongodb_records(self, dbName, dbCollName):
         """
-        If to_save already has an "_id" then an update() (upsert) operation is 
-        performed and any existing document with that "_id" is overwritten. 
-        Otherwise an insert() operation is performed. In this case if manipulate 
-        is True an "_id" will be added to to_save and this method returns the 
-        "_id" of the saved document.
+        Retrieve ALL of the records in a give MongoDB database collection.
 
         Usage is:
-        | @{allResults} | Retrieve MongoDB Records | DBName | CollectionName | JSON |
-        | Log Many | @{allResults} |
+        | ${allResults} | Retrieve All MongoDB Records | DBName | CollectionName |
+        | Log | ${allResults} |
         """
         cur = None
-        resultsList = list
+        results = ''
+        try:
+            dbName = str(dbName)
+            dbCollName = str(dbCollName)
+            db = self._dbconnection['%s' % (dbName,)]
+            coll = db['%s' % (dbCollName)]
+            for d in coll.find():
+                results = '%s%s' % (results, d.items())
+            print "Done printing records"
+            return results
+        finally :
+            if cur :
+                self._dbconnection.end_request() 
+
+    def retrieve_some_mongodb_records(self, dbName, dbCollName, recordJSON):
+        """
+        Retrieve some of the records from a given MongoDB database collection
+        based on the JSON entered.
+
+        Usage is:
+        | ${allResults} | Retrieve Some MongoDB Records | DBName | CollectionName | JSON |
+        | Log | ${allResults} |
+        """
+        cur = None
+        #resultsList = list
+        results = ''
         try:
             dbName = str(dbName)
             dbCollName = str(dbCollName)
             #recordJSON = str(recordJSON)
+            #recordJSON = json.loads(recordJSON)
             print "dbName is     [%s]" % dbName
-            print "dbName is     [%s]" % type(dbName)
+            #print "dbName is     [%s]" % type(dbName)
             print "dbCollName is [%s]" % dbCollName
-            print "dbCollName is [%s]" % type(dbCollName)
+            #print "dbCollName is [%s]" % type(dbCollName)
             #print "recordJSON is [%s]" % recordJSON
             #print "recordJSON is [%s]" % type(recordJSON)
             db = self._dbconnection['%s' % (dbName,)]
             coll = db['%s' % (dbCollName)]
             print "coll is       [%s]" % coll
             #allResults = coll.find('%s' % (recordJSON,))
-            allResults = coll.find()
+            #allResults = coll.find()
             print "Printing records"
-            for d in allResults:
-                print d
-                print type(d)
-                d = list(d)
-                resultsList.append(d)
-                print "resultsList is %s" % resultsList
+            for d in coll.find():
+                #print "d is       [%s]" % d
+                #print "d type is [%s]" % type(d)
+                #print "list(d) is [%s]" % list(d)
+                #print json.dumps(d)
+                results = '%s%s' % (results, d.items())
+                #print "results is [%s]" % results
+                #resultsList = resultsList.append(results)
+                #return d
+                #print "d decoded is [%s]" % json.JSONDecoder(d)
+                #resultsList = resultsList.append(json.JSONDecoder(d))
+            #for d in allResults:
+            #    print "d is       [%s]" % d
+            #    print "d type is [%s]" % type(d)
+            #    #d = list(d)
+            #    print "list(d) is [%s]" % list(d)
+            #    resultsList.append(list(d))
+            #    #print "resultsList is %s" % resultsList
+            #print "results is [%s]" % results
             print "Done printing records"
-            print allResults
-            return relustsList
+            #resultsList = list(allResults)
+            #print "allResults is [%s]" % allResults
+            #print "type allResults is [%s]" % type(allResults)
+            #print "resultsList is [%s]" % resultsList
+            #print "type allResults is [%s]" % type(allResults)
+            #return resultsList
+            return results
             #return json.JSONEncoder().encode(allResults)
             #return jsonRecords
         finally :
