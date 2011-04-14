@@ -37,14 +37,14 @@ class ConnectionManager(object):
         db_api_2 = __import__(dbapiModuleName);
         
         dbPort = int(dbPort)
-        print "host is               [%s]" % dbHost
-        print "port is               [%s]" % dbPort
-        print "pool_size is          [%s]" % dbPoolSize
-        print "auto_start_request is [%s]" % dbAutoStart
-        print "timeout is            [%s]" % dbTimeout
-        print "slave_okay is         [%s]" % dbSlaveOkay
-        print "document_class is     [%s]" % dbDocClass
-        print "tz_aware is           [%s]" % dbTZAware
+        print "host is               [ %s ]" % dbHost
+        print "port is               [ %s ]" % dbPort
+        print "pool_size is          [ %s ]" % dbPoolSize
+        print "auto_start_request is [ %s ]" % dbAutoStart
+        print "timeout is            [ %s ]" % dbTimeout
+        print "slave_okay is         [ %s ]" % dbSlaveOkay
+        print "document_class is     [ %s ]" % dbDocClass
+        print "tz_aware is           [ %s ]" % dbTZAware
         
         self._dbconnection = db_api_2.connection.Connection (host=dbHost, port=dbPort, pool_size=dbPoolSize, auto_start_request=dbAutoStart, timeout=dbTimeout, slave_okay=dbSlaveOkay, network_timeout=dbNetworkTimeout, document_class=dbDocClass, tz_aware=dbTZAware);
         
