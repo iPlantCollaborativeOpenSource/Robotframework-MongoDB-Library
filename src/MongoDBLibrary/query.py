@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 import json
+from pymongo.objectid import ObjectId
 
 class Query(object):
     """
@@ -251,22 +252,25 @@ class Query(object):
         | ${allResults} | Remove MongoDB Records | DBName | CollectionName | JSON |
         | Log | ${allResults} |
         """
+        #  {u'msg': u'Hello 2', u'timestamp': 2, u'_id': ObjectId('4da4a68a52dfbd601b000001')}
         cur = None
         results = ''
         try:
             dbName = str(dbName)
-            print "dbName is     [ %s ]" % dbName
-            print "dbName is     [ %s ]" % type(dbName)
+            print "dbName is       [ %s ]" % dbName
+            print "dbName is       [ %s ]" % type(dbName)
             dbCollName = str(dbCollName)
-            print "dbCollName is [ %s ]" % dbCollName
-            print "dbCollName is [ %s ]" % type(dbCollName)
-            print "recordJSON is [ %s ]" % recordJSON
-            print "recordJSON is [ %s ]" % type(recordJSON)
+            print "dbCollName is   [ %s ]" % dbCollName
+            print "dbCollName is   [ %s ]" % type(dbCollName)
+            print "recordJSON is   [ %s ]" % recordJSON
+            print "recordJSON is   [ %s ]" % type(recordJSON)
             recordJSON = dict(json.loads(recordJSON))
-            print "recordJSON is [ %s ]" % recordJSON
-            print "recordJSON is [ %s ]" % type(recordJSON)
+            print "recordJSON is   [ %s ]" % recordJSON
+            print "recordJSON is   [ %s ]" % type(recordJSON)
             db = self._dbconnection['%s' % (dbName,)]
             coll = db['%s' % (dbCollName)]
+            print "coll is         [ %s ]" % coll
+            print "type of coll is [ %s ]" % type(coll)
             allResults = coll.remove(recordJSON)
             return allResults
         finally :
