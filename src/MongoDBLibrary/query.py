@@ -262,9 +262,10 @@ class Query(object):
             dbCollName = str(dbCollName)
             print "dbCollName is   [ %s ]" % dbCollName
             print "dbCollName is   [ %s ]" % type(dbCollName)
-            print "recordJSON is   [ %s ]" % recordJSON
-            print "recordJSON is   [ %s ]" % type(recordJSON)
+            #print "recordJSON is   [ %s ]" % recordJSON
+            #print "recordJSON is   [ %s ]" % type(recordJSON)
             recordJSON = dict(json.loads(recordJSON))
+            #recordJSON = dict(recordJSON)
             print "recordJSON is   [ %s ]" % recordJSON
             print "recordJSON is   [ %s ]" % type(recordJSON)
             db = self._dbconnection['%s' % (dbName,)]
