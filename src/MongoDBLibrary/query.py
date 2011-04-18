@@ -162,8 +162,14 @@ class Query(object):
         is True an "_id" will be added to to_save and this method returns the 
         "_id" of the saved document.
 
-        Usage is:
         | ${allResults} | Save MongoDB Records | DBName | CollectionName | JSON |
+
+        Enter a new record usage is:
+        | ${allResults} | Save MongoDB Records | foo | bar | {"timestamp":1, "msg":"Hello 1"} |
+        | Log | ${allResults} |
+
+        Update an existing record usage is:
+        | ${allResults} | Save MongoDB Records | foo | bar | {"timestamp":1, "msg":"Hello 1"} |
         | Log | ${allResults} |
         """
         db = None
@@ -175,6 +181,8 @@ class Query(object):
             #print "dbCollName is         [ %s ]" % dbCollName
             #print "dbCollName is         [ %s ]" % type(dbCollName)
             recordJSON = dict(json.loads(recordJSON))
+            if recordJSON.has_key('_id'):
+                recordJSON['_id']=ObjectId(recordJSON['_id'])
             #print "recordJSON is         [ %s ]" % recordJSON
             #print "recordJSON is         [ %s ]" % type(recordJSON)
             db = self._dbconnection['%s' % (dbName,)]
@@ -192,10 +200,13 @@ class Query(object):
     def retrieve_all_mongodb_records(self, dbName, dbCollName):
         """
         Retrieve ALL of the records in a give MongoDB database collection.
+        Returned value must be single quoted for comparison, otherwise you will
+        get a TypeError error.
 
         Usage is:
         | ${allResults} | Retrieve All MongoDB Records | DBName | CollectionName |
         | Log | ${allResults} |
+        | Should Contain X Times | ${allResults} | '${recordNo1}' | 1 |
         """
         db = None
         results = ''
@@ -215,10 +226,13 @@ class Query(object):
         """
         Retrieve some of the records from a given MongoDB database collection
         based on the JSON entered.
+        Returned value must be single quoted for comparison, otherwise you will
+        get a TypeError error.
 
         Usage is:
         | ${allResults} | Retrieve Some MongoDB Records | DBName | CollectionName | JSON |
         | Log | ${allResults} |
+        | Should Contain X Times | ${allResults} | '${recordNo1}' | 1 |
         """
         db = None
         results = ''
@@ -265,22 +279,22 @@ class Query(object):
         db = None
         try:
             dbName = str(dbName)
-            print "dbName is       [ %s ]" % dbName
-            print "dbName is       [ %s ]" % type(dbName)
+            #print "dbName is       [ %s ]" % dbName
+            #print "dbName is       [ %s ]" % type(dbName)
             dbCollName = str(dbCollName)
-            print "dbCollName is   [ %s ]" % dbCollName
-            print "dbCollName is   [ %s ]" % type(dbCollName)
-            print "recordJSON is   [ %s ]" % recordJSON
-            print "recordJSON is   [ %s ]" % type(recordJSON)
+            #print "dbCollName is   [ %s ]" % dbCollName
+            #print "dbCollName is   [ %s ]" % type(dbCollName)
+            #print "recordJSON is   [ %s ]" % recordJSON
+            #print "recordJSON is   [ %s ]" % type(recordJSON)
             recordJSON = json.loads(recordJSON)
             if recordJSON.has_key('_id'):
                 recordJSON['_id']=ObjectId(recordJSON['_id'])
-            print "recordJSON is   [ %s ]" % recordJSON
-            print "recordJSON is   [ %s ]" % type(recordJSON)
+            #print "recordJSON is   [ %s ]" % recordJSON
+            #print "recordJSON is   [ %s ]" % type(recordJSON)
             db = self._dbconnection['%s' % (dbName,)]
             coll = db['%s' % (dbCollName)]
-            print "coll is         [ %s ]" % coll
-            print "type of coll is [ %s ]" % type(coll)
+            #print "coll is         [ %s ]" % coll
+            #print "type of coll is [ %s ]" % type(coll)
             allResults = coll.remove(recordJSON)
             return allResults
         finally :
