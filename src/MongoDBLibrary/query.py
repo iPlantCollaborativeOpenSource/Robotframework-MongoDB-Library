@@ -48,7 +48,7 @@ class Query(object):
         | Log Many | @{allCollections} |
         | Should Contain | ${allCollections} | CollName |
         """
-        cur = None
+        db = None
         try:
             dbName = str(dbName)
             #print "dbName is [ %s ]" % dbName
@@ -57,7 +57,7 @@ class Query(object):
             allCollections = db.collection_names()
             return allCollections
         finally :
-            if cur :
+            if db :
                 self._dbconnection.end_request() 
 
     def drop_mongodb_database(self, dbDelName):
@@ -92,7 +92,7 @@ class Query(object):
         | @{allCollections} | Get MongoDB Collections | myDB |
         | Should Not Contain | ${allCollections} | CollectionName |
         """
-        cur = None
+        db = None
         try:
             dbName = str(dbName)
             #print "dbName is     [ %s ]" % dbName
@@ -102,7 +102,7 @@ class Query(object):
             db = self._dbconnection['%s' % (dbName,)]
             db.drop_collection('%s' % (dbCollName))
         finally :
-            if cur :
+            if db :
                 self._dbconnection.end_request() 
 
     def validate_mongodb_collection(self, dbName, dbCollName):
@@ -114,7 +114,7 @@ class Query(object):
         | ${allResults} | Validate MongoDB Collection | DBName | CollectionName |
         | Log | ${allResults} |
         """
-        cur = None
+        db = None
         try:
             dbName = str(dbName)
             dbCollName = str(dbCollName)
@@ -126,7 +126,7 @@ class Query(object):
             allResults = db.validate_collection('%s' % dbCollName)
             return allResults
         finally :
-            if cur :
+            if db :
                 self._dbconnection.end_request() 
 
     def get_mongodb_collection_count(self, dbName, dbCollName):
@@ -137,7 +137,7 @@ class Query(object):
         | ${allResults} | Get MongoDB Collection Count | DBName | CollectionName |
         | Log | ${allResults} |
         """
-        cur = None
+        db = None
         try:
             dbName = str(dbName)
             dbCollName = str(dbCollName)
@@ -151,7 +151,7 @@ class Query(object):
             count = coll.count()
             return count
         finally :
-            if cur :
+            if db :
                 self._dbconnection.end_request() 
 
     def save_mongodb_records(self, dbName, dbCollName, recordJSON):
@@ -166,7 +166,7 @@ class Query(object):
         | ${allResults} | Save MongoDB Records | DBName | CollectionName | JSON |
         | Log | ${allResults} |
         """
-        cur = None
+        db = None
         try:
             dbName = str(dbName)
             #print "dbName is             [ %s ]" % dbName
@@ -186,7 +186,7 @@ class Query(object):
             #print "type of allResults is [ %s ]" % type(allResults)
             return allResults
         finally :
-            if cur :
+            if db :
                 self._dbconnection.end_request() 
 
     def retrieve_all_mongodb_records(self, dbName, dbCollName):
@@ -197,7 +197,7 @@ class Query(object):
         | ${allResults} | Retrieve All MongoDB Records | DBName | CollectionName |
         | Log | ${allResults} |
         """
-        cur = None
+        db = None
         results = ''
         try:
             dbName = str(dbName)
@@ -208,7 +208,7 @@ class Query(object):
                 results = '%s%s' % (results, d.items())
             return results
         finally :
-            if cur :
+            if db :
                 self._dbconnection.end_request() 
 
     def retrieve_some_mongodb_records(self, dbName, dbCollName, recordJSON):
@@ -220,7 +220,7 @@ class Query(object):
         | ${allResults} | Retrieve Some MongoDB Records | DBName | CollectionName | JSON |
         | Log | ${allResults} |
         """
-        cur = None
+        db = None
         results = ''
         try:
             dbName = str(dbName)
@@ -240,21 +240,29 @@ class Query(object):
                 results = '%s%s' % (results, d.items())
             return results
         finally :
-            if cur :
+            if db :
                 self._dbconnection.end_request() 
 
     def remove_mongodb_records(self, dbName, dbCollName, recordJSON):
         """
         Remove some of the records from a given MongoDB database collection
         based on the JSON entered.
-
+        
+        The JSON fed in must be double quoted but when doing a comparison, it
+        has to be single quoted.  See Usage below
+        
         Usage is:
-        | ${allResults} | Remove MongoDB Records | DBName | CollectionName | JSON |
+        | ${allResults} | Remove MongoDB Records | ${MDBDB} | ${MDBColl} | {"_id": "4dacab2d52dfbd26f1000000"} |
         | Log | ${allResults} |
+        | ${output} | Retrieve All MongoDB Records | ${MDBDB} | ${MDBColl} |
+        | Should Not Contain | ${output} | '4dacab2d52dfbd26f1000000' |
+        or
+        | ${allResults} | Remove MongoDB Records | ${MDBDB} | ${MDBColl} | {"timestamp": {"$lt": 2}} |
+        | Log | ${allResults} |
+        | ${output} | Retrieve All MongoDB Records | ${MDBDB} | ${MDBColl} |
+        | Should Not Contain | ${output} | 'timestamp', 1 |
         """
-        #  {u'msg': u'Hello 2', u'timestamp': 2, u'_id': ObjectId('4da4a68a52dfbd601b000001')}
-        cur = None
-        results = ''
+        db = None
         try:
             dbName = str(dbName)
             print "dbName is       [ %s ]" % dbName
@@ -262,10 +270,11 @@ class Query(object):
             dbCollName = str(dbCollName)
             print "dbCollName is   [ %s ]" % dbCollName
             print "dbCollName is   [ %s ]" % type(dbCollName)
-            #print "recordJSON is   [ %s ]" % recordJSON
-            #print "recordJSON is   [ %s ]" % type(recordJSON)
-            recordJSON = dict(json.loads(recordJSON))
-            #recordJSON = dict(recordJSON)
+            print "recordJSON is   [ %s ]" % recordJSON
+            print "recordJSON is   [ %s ]" % type(recordJSON)
+            recordJSON = json.loads(recordJSON)
+            if recordJSON.has_key('_id'):
+                recordJSON['_id']=ObjectId(recordJSON['_id'])
             print "recordJSON is   [ %s ]" % recordJSON
             print "recordJSON is   [ %s ]" % type(recordJSON)
             db = self._dbconnection['%s' % (dbName,)]
@@ -275,6 +284,6 @@ class Query(object):
             allResults = coll.remove(recordJSON)
             return allResults
         finally :
-            if cur :
+            if db :
                 self._dbconnection.end_request() 
 
