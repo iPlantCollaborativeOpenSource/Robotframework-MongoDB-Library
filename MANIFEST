@@ -1,5 +1,5 @@
 setup.py
 src/MongoDBLibrary/__init__.py
-src/MongoDBLibrary/assertion.py
-src/MongoDBLibrary/connection_manager.py
-src/MongoDBLibrary/query.py
+src/MongoDBLibrary/mongo_connection_manager.py
+src/MongoDBLibrary/mongoquery.py
+src/MongoDBLibrary/version.py

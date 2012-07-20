@@ -1,4 +1,4 @@
-#  Copyright (c) 2011 Jerry Schneider
+#  Copyright (c) 2012 Jerry Schneider
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -12,31 +12,27 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from connection_manager import ConnectionManager
-from query import Query
-#from assertion import Assertion
+from mongo_connection_manager import MongoConnectionManager
+from mongoquery import MongoQuery
+from version import VERSION
 
-__version__ = '0.1'
+#__version__ = '0.1'
 
-#class MongoDBLibrary(ConnectionManager, Query, Assertion):
-class MongoDBLibrary(ConnectionManager, Query):
+class MongoDBLibrary(MongoConnectionManager, MongoQuery):
     """
-    MongoDB Database Library contains utilities meant for Robot Framework's usage.
+    MongoDB Library contains utilities meant for Robot Framework's usage.
     
-    This can allow you to query your database after an action has been made to verify the results.
+    This can allow you to query your Mongo database after an action has been made to verify the results.
     
     
     
     References:
     
-     + PyMongo - http://api.mongodb.org/python/1.9%2B/index.html
+     + PyMongo 2.2 Documentation - http://api.mongodb.org/python/2.2/
      
     Notes:
     
     
-    
-    `compatible* - or at least theoretically it should be compatible. Currently tested only with MongoDB
-    (using pymongo).`
     
     Example Usage:
     | # Setup |
@@ -58,4 +54,5 @@ class MongoDBLibrary(ConnectionManager, Query):
     """
     
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    ROBOT_LIBRARY_VERSION = VERSION
 

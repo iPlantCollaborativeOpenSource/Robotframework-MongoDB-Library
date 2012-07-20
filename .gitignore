@@ -1,0 +1,9 @@
+build/
+*.pyc
+.idea
+.DS_Store
+downloads/
+report.html
+output.xml
+log.html
+
