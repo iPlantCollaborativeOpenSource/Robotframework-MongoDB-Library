@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 """Setup script for Robot's MongoDB Library distributions"""
 
 from distutils.core import setup
