@@ -172,7 +172,7 @@ class MongoQuery(object):
         | Log | ${allResults} |
         | Should Contain X Times | ${allResults} | '${recordNo1}' | 1 |
         """
-        return self.retrieve_mongodb_records(dbName, dbCollName, {}, returnDocuments)
+        return self.retrieve_mongodb_records(dbName, dbCollName, '{}', returnDocuments)
 
     def retrieve_some_mongodb_records(self, dbName, dbCollName, recordJSON, returnDocuments=False):
         """
