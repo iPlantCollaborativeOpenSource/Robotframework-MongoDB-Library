@@ -6,4 +6,6 @@ downloads/
 report.html
 output.xml
 log.html
+*.sublime-project
+*.sublime-workspace
 
