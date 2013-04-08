@@ -1,5 +1,6 @@
 build/
 *.pyc
+*.class
 .idea
 .DS_Store
 downloads/
