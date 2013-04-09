@@ -189,7 +189,21 @@ class MongoQuery(object):
         print "| ${allResults} | Retrieve Some MongoDB Records | %s | %s | %s |" % (dbName,dbCollName,recordJSON)
         return self._retrieve_mongodb_records(dbName, dbCollName, recordJSON, returnDocuments)
 
-    def _retrieve_mongodb_records(self, dbName, dbCollName, recordJSON, returnDocuments=False):
+    def retreive_mongodb_records_with_desired_fields(self, dbName, dbCollName, recordJSON, fields, return__id=True, returnDocuments=False):
+        fields = fields.replace(' ', '')
+        data = {}
+        for item in fields.split(','):
+            data[item] = True
+
+        if return__id:
+            data['_id'] = True
+        else:
+            data['_id'] = False
+
+        print "| ${allResults} | Retrieve MongoDB Records | %s | %s | %s | %s |" % (dbName, dbCollName, recordJSON, data)
+        return self._retrieve_mongodb_records(dbName, dbCollName, recordJSON, data, returnDocuments)
+
+    def _retrieve_mongodb_records(self, dbName, dbCollName, recordJSON, fields=[], returnDocuments=False):
         db = None
         try:
             dbName = str(dbName)
@@ -197,7 +211,10 @@ class MongoQuery(object):
             criteria = dict(json.loads(recordJSON))
             db = self._dbconnection['%s' % (dbName,)]
             coll = db['%s' % (dbCollName)]
-            results = coll.find(criteria)
+            if fields:
+                results = coll.find(criteria, fields)
+            else:
+                results = coll.find(criteria)
             if returnDocuments:
                 return list(results)
             else:
