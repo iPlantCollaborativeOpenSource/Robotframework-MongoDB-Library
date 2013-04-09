@@ -15,8 +15,8 @@ SRC_DIR = os.path.join(ROOT_DIR, "src")
 sys.path.insert(0, SRC_DIR)
 
 # Suppress logging from MongoDBLibrary
-#f = open(os.devnull, 'w')
-#sys.stdout = f
+f = open(os.devnull, 'w')
+sys.stdout = f
 
 # settings for unit test
 test_mongo_connection_host = 'localhost'
