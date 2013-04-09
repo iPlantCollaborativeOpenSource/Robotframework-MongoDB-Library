@@ -172,7 +172,7 @@ class MongoQuery(object):
         | Log | ${allResults} |
         | Should Contain X Times | ${allResults} | '${recordNo1}' | 1 |
         """
-        return self.retrieve_mongodb_records(dbName, dbCollName, '{}', returnDocuments)
+        return self._retrieve_mongodb_records(dbName, dbCollName, '{}', returnDocuments)
 
     def retrieve_some_mongodb_records(self, dbName, dbCollName, recordJSON, returnDocuments=False):
         """
@@ -187,9 +187,9 @@ class MongoQuery(object):
         | Should Contain X Times | ${allResults} | '${recordNo1}' | 1 |
         """
         print "| ${allResults} | Retrieve Some MongoDB Records | %s | %s | %s |" % (dbName,dbCollName,recordJSON)
-        return self.retrieve_mongodb_records(dbName, dbCollName, recordJSON, returnDocuments)
+        return self._retrieve_mongodb_records(dbName, dbCollName, recordJSON, returnDocuments)
 
-    def retrieve_mongodb_records(self, dbName, dbCollName, recordJSON, returnDocuments=False):
+    def _retrieve_mongodb_records(self, dbName, dbCollName, recordJSON, returnDocuments=False):
         db = None
         try:
             dbName = str(dbName)

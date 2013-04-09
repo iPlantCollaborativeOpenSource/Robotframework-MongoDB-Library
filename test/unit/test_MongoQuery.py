@@ -6,6 +6,7 @@ import unittest
 import os
 import time
 import sys
+import json
 
 # Get src directory and put it in path
 # To get import forking for MongoDBLibrary
@@ -23,7 +24,11 @@ test_mongo_connection_host = 'localhost'
 test_mongo_connection_port = 51000
 test_database_name = 'test_database'
 test_collection_name = 'test_collection'
-data1 = {"firstName": "John","lastName": "Smith","age": 25,"address": {"streetAddress": "21 2nd Street","city": "New York","state": "NY","postalCode": 10021},"phoneNumbers": [{"type": "home","number": "212 555-1234"},{"type": "fax","number": "646 555-4567"}]}
+# Data for unit tests
+data1 = {"firstName": "John", "lastName": "Smith", "age": 25,"address": {"streetAddress": "21 2nd Street", "city": "New York", "state": "NY", "postalCode": 10021}, "phoneNumbers": [{"type": "home", "number": "212 555-1234"},{"type": "fax", "number": "646 555-4567"}]}
+data2 = {"firstName": "John", "lastName": "Wayne", "age": 99}
+data3 = {"firstName": "Clark", "lastName": "Kent", "age": 81}
+projection1 = '{"firstName": "John"}'
 
 from MongoDBLibrary import MongoDBLibrary
 
@@ -97,6 +102,79 @@ class TestMongoDBLibrary(unittest.TestCase):
         expected = ['local']
         self.assertEqual(database_names, expected)
 
+    def test_retrieve_all_mongodb_records_when_multiple_documents(self):
+        self.mongo_create_db()
+        self.mongo_inser_data(data2)
+        self.mongo_inser_data(data3)
+
+        a = MongoDBLibrary()
+        a.connect_to_mongodb(dbHost=test_mongo_connection_host, dbPort=test_mongo_connection_port)
+        data = a.retrieve_all_mongodb_records(dbName=test_database_name, dbCollName=test_collection_name)
+        a.disconnect_from_mongodb()
+
+        expected = self.mongo_find_from_collection()
+        self.assertEqual(data, expected)
+
+    def test_retrieve_all_mongodb_records_when_one_document(self):
+        self.mongo_create_db()
+        self.mongo_inser_data(data2)
+
+        a = MongoDBLibrary()
+        a.connect_to_mongodb(dbHost=test_mongo_connection_host, dbPort=test_mongo_connection_port)
+        data = a.retrieve_all_mongodb_records(dbName=test_database_name, dbCollName=test_collection_name)
+        a.disconnect_from_mongodb()
+
+        expected = self.mongo_find_from_collection()
+        self.assertEqual(data, expected)
+
+    def test_retrieve_all_mongodb_records_when_zero_documents(self):
+        self.mongo_create_db()
+
+        a = MongoDBLibrary()
+        a.connect_to_mongodb(dbHost=test_mongo_connection_host, dbPort=test_mongo_connection_port)
+        data = a.retrieve_all_mongodb_records(dbName=test_database_name, dbCollName=test_collection_name)
+        a.disconnect_from_mongodb()
+
+        expected = ''
+        self.assertEqual(data, expected)
+
+    def test_retrieve_all_mongodb_records_when_collection_does_not_exist(self):
+        self.mongo_create_db()
+        self.mongo_inser_data(data2)
+
+        a = MongoDBLibrary()
+        a.connect_to_mongodb(dbHost=test_mongo_connection_host, dbPort=test_mongo_connection_port)
+        data = a.retrieve_all_mongodb_records(dbName=test_database_name, dbCollName='not_exist')
+        a.disconnect_from_mongodb()
+
+        expected = ''
+        self.assertEqual(data, expected)
+
+    def test_retrieve_all_mongodb_records_when_database_does_not_exist(self):
+        self.mongo_create_db()
+        self.mongo_inser_data(data2)
+
+        a = MongoDBLibrary()
+        a.connect_to_mongodb(dbHost=test_mongo_connection_host, dbPort=test_mongo_connection_port)
+        data = a.retrieve_all_mongodb_records(dbName='no-database', dbCollName='not_exist')
+        a.disconnect_from_mongodb()
+
+        expected = ''
+        self.assertEqual(data, expected)
+
+    def test_retrieve_some_mongodb_records_when_multiple_documents(self):
+        self.mongo_create_db()
+        self.mongo_inser_data(data2)
+        self.mongo_inser_data(data3)
+
+        a = MongoDBLibrary()
+        a.connect_to_mongodb(dbHost=test_mongo_connection_host, dbPort=test_mongo_connection_port)
+        data = a.retrieve_some_mongodb_records(dbName=test_database_name, dbCollName=test_collection_name, recordJSON=projection1)
+        a.disconnect_from_mongodb()
+
+        expected = self.mongo_find_from_collection(record=projection1)
+        self.assertEqual(data, expected)
+
     def tearDown(self):
         # Terminate Mongodb process
         if self._process:
@@ -117,6 +195,12 @@ class TestMongoDBLibrary(unittest.TestCase):
 
     def mongo_database_names(self, db=test_database_name, collection=test_collection_name):
         return self._conn.database_names()
+
+    def mongo_find_from_collection(self, db=test_database_name, collection=test_collection_name, record='{}'):
+        data = ''
+        for item in self._collection.find(dict(json.loads(record))):
+            data = '%s%s' % (data, item.items())
+        return data
 
 
 if __name__ == '__main__':
