@@ -135,20 +135,20 @@ class TestMongoDBLibrary(unittest.TestCase):
         expected = self.mongo_find_from_collection(record=selection1)
         self.assertEqual(data, expected)
 
-    def test_retreive_mongodb_records_with_desired_fields_when_one_document_in_db(self):
+    def test_retrieve_mongodb_records_with_desired_fields_when_one_document_in_db(self):
         self.mongo_create_db()
         self.mongo_inser_data(data1)
 
         field = 'address.postalCode, address.city'
         a = MongoDBLibrary()
         a.connect_to_mongodb(dbHost=test_mongo_connection_host, dbPort=test_mongo_connection_port)
-        data = a.retreive_mongodb_records_with_desired_fields(dbName=test_database_name, dbCollName=test_collection_name, recordJSON='{}', fields=field, return__id=False)
+        data = a.retrieve_mongodb_records_with_desired_fields(dbName=test_database_name, dbCollName=test_collection_name, recordJSON='{}', fields=field, return__id=False)
         a.disconnect_from_mongodb()
-        
+
         expected = str([(u'address', {u'postalCode': 10021, u'city': u'New York'})])
         self.assertEqual(data, expected)
 
-    def test_retreive_mongodb_records_with_desired_fields_when_multiple_documents_in_db(self):
+    def test_retrieve_mongodb_records_with_desired_fields_when_multiple_documents_in_db(self):
         self.mongo_create_db()
         self.mongo_inser_data(data1)
         self.mongo_inser_data(data4)
@@ -156,13 +156,26 @@ class TestMongoDBLibrary(unittest.TestCase):
         field = 'address.postalCode, address.city'
         a = MongoDBLibrary()
         a.connect_to_mongodb(dbHost=test_mongo_connection_host, dbPort=test_mongo_connection_port)
-        data = a.retreive_mongodb_records_with_desired_fields(dbName=test_database_name, dbCollName=test_collection_name, recordJSON='{}', fields=field, return__id=False)
+        data = a.retrieve_mongodb_records_with_desired_fields(dbName=test_database_name, dbCollName=test_collection_name, recordJSON='{}', fields=field, return__id=False)
         a.disconnect_from_mongodb()
 
         expected = "[(u'address', {u'postalCode': 10021, u'city': u'New York'})][(u'address', {u'postalCode': 10021, u'city': u'Metropolis'})]"
         self.assertEqual(data, expected)
 
-    def test_retreive_mongodb_records_with_desired_fields__id_is_returned(self):
+    def test_retrieve_mongodb_records_with_desired_fields_when_fields_is_empty(self):
+        self.mongo_create_db()
+        self.mongo_inser_data(data1)
+        self.mongo_inser_data(data4)
+
+        a = MongoDBLibrary()
+        a.connect_to_mongodb(dbHost=test_mongo_connection_host, dbPort=test_mongo_connection_port)
+        data = a.retrieve_mongodb_records_with_desired_fields(dbName=test_database_name, dbCollName=test_collection_name, recordJSON='{}', fields='', return__id=False)
+        a.disconnect_from_mongodb()
+
+        expected = "[(u'phoneNumbers', [{u'type': u'home', u'number': u'212 555-1234'}, {u'type': u'fax', u'number': u'646 555-4567'}]), (u'firstName', u'John'), (u'lastName', u'Smith')"
+        self.assertIn(expected, data)
+
+    def test_retrieve_mongodb_records_with_desired_fields__id_is_returned(self):
         self.mongo_create_db()
         self.mongo_inser_data(data1)
         self.mongo_inser_data(data4)
@@ -170,10 +183,38 @@ class TestMongoDBLibrary(unittest.TestCase):
         field = 'address.postalCode, address.city'
         a = MongoDBLibrary()
         a.connect_to_mongodb(dbHost=test_mongo_connection_host, dbPort=test_mongo_connection_port)
-        data = a.retreive_mongodb_records_with_desired_fields(dbName=test_database_name, dbCollName=test_collection_name, recordJSON='{}', fields=field, return__id=True)
+        data = a.retrieve_mongodb_records_with_desired_fields(dbName=test_database_name, dbCollName=test_collection_name, recordJSON='{}', fields=field, return__id=True)
         a.disconnect_from_mongodb()
 
         expected = "u'_id', ObjectId('"
+        self.assertIn(expected, data)
+
+    def test_retrieve_mongodb_records_with_desired_fields_when_searhing_a_record(self):
+        self.mongo_create_db()
+        self.mongo_inser_data(data1)
+        self.mongo_inser_data(data4)
+
+        field = 'address.postalCode, address.city'
+        a = MongoDBLibrary()
+        a.connect_to_mongodb(dbHost=test_mongo_connection_host, dbPort=test_mongo_connection_port)
+        data = a.retrieve_mongodb_records_with_desired_fields(dbName=test_database_name, dbCollName=test_collection_name, recordJSON=selection1, fields=field, return__id=False)
+        a.disconnect_from_mongodb()
+
+        expected = "[(u'address', {u'postalCode': 10021, u'city': u'New York'})]"
+        self.assertEqual(data, expected)
+
+    def test_retrieve_mongodb_records_with_desired_fields_when_return__id_is_not_boolean(self):
+        self.mongo_create_db()
+        self.mongo_inser_data(data1)
+        self.mongo_inser_data(data4)
+
+        field = 'address.postalCode, address.city'
+        a = MongoDBLibrary()
+        a.connect_to_mongodb(dbHost=test_mongo_connection_host, dbPort=test_mongo_connection_port)
+        data = a.retrieve_mongodb_records_with_desired_fields(dbName=test_database_name, dbCollName=test_collection_name, recordJSON=selection1, fields=field, return__id='foobar')
+        a.disconnect_from_mongodb()
+
+        expected = "(u'address', {u'postalCode': 10021, u'city': u'New York'})]"
         self.assertIn(expected, data)
 
     def tearDown(self):

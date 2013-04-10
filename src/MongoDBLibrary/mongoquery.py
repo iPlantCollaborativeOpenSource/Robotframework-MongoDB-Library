@@ -189,18 +189,74 @@ class MongoQuery(object):
         print "| ${allResults} | Retrieve Some MongoDB Records | %s | %s | %s |" % (dbName,dbCollName,recordJSON)
         return self._retrieve_mongodb_records(dbName, dbCollName, recordJSON, returnDocuments)
 
-    def retreive_mongodb_records_with_desired_fields(self, dbName, dbCollName, recordJSON, fields, return__id=True, returnDocuments=False):
-        fields = fields.replace(' ', '')
-        data = {}
-        for item in fields.split(','):
-            data[item] = True
+    def retrieve_mongodb_records_with_desired_fields(self, dbName, dbCollName, recordJSON, fields, return__id=True, returnDocuments=False):
+        """
+        Retrieves from a document(s) the desired projection. In a sql terms: select a and b from table;
+        For more details about querying records from Mongodb and comparison to sql see the
+        [http://docs.mongodb.org/manual/reference/sql-comparison|Mongodb]
+        documentation.
 
-        if return__id:
-            data['_id'] = True
+        In Mongodb terms would correspond: db.collection.find({ }, { fieldA: 1, fieldB: 1 })
+
+        For usage of the dbName, dbCollName and recordJSON arguments, see the keyword
+        `Retrieve Some Mongodb Records` documentation.
+
+        fields argument control what field(s) are returned from the document(s),
+        it is a comma separated string of fields. It is also possible to return fields
+        inside of the array element, by separating field by dot notation. See the
+        usage examples for more details how to use fields argument.
+
+        return__id controls is the _id field also returned with the projections.
+        Possible values are True and False
+
+        The following usages assume a database name account, collection named users and
+        that contain documents of the following prototype:
+        {"firstName": "Clark", "lastName": "Kent", "address": {"streetAddress": "21 2nd Street", "city": "Metropolis"}}
+
+        Usage is:
+        | ${firstName} | Retrieve MongoDB Records With Desired Fields | account | users | {} | firstName | 0 |
+        | ${address} | Retrieve MongoDB Records With Desired Fields | account | users | {} | address | ${false} | # Robot BuiltIn boolean value |
+        | ${address_city} | Retrieve MongoDB Records With Desired Fields | account | users | {} | address.city | False |
+        | ${address_city_and_streetAddress} | Retrieve MongoDB Records With Desired Fields | account | users | {} | address.city, address.streetAddress | False |
+        | ${_id} | Retrieve MongoDB Records With Desired Fields | account | users | {} | firstName | True |
+        =>
+        | ${firstName} = [(u'firstName', u'Clark')]
+        | ${address} = [(u'address', {u'city': u'Metropolis', u'streetAddress': u'21 2nd Street'})]
+        | ${address_city} = [(u'address', {u'city': u'Metropolis'})]
+        | ${address_city_and_streetAddress} = [(u'address', {u'city': u'Metropolis', u'streetAddress': u'21 2nd Street'})] # Same as retrieving only address
+        | ${_id} = [(u'_id', ObjectId('...')), (u'firstName', u'Clark')]
+
+        """
+        # Convert return__id to boolean value because Robot Framework returns False/True as Unicode
+        try:
+            if return__id.isdigit():
+                pass
+            else:
+                return__id = return__id.lower()
+                if return__id == 'false':
+                    return__id = False
+                else:
+                    return__id = True
+        except AttributeError:
+            pass
+
+        # Convert the fields string as a dictionary and handle _id field
+        if fields:
+            data = {}
+            fields = fields.replace(' ', '')
+            for item in fields.split(','):
+                data[item] = True
+
+            if return__id:
+                data['_id'] = True
+            elif not return__id:
+                data['_id'] = False
+            else:
+                raise Exception('Not a boolean value for return__id: s%') % (return__id)
         else:
-            data['_id'] = False
+            data = []
 
-        print "| ${allResults} | Retrieve MongoDB Records | %s | %s | %s | %s |" % (dbName, dbCollName, recordJSON, data)
+        print "| ${allResults} | retreive_mongodb_records_with_desired_fields | %s | %s | %s | %s | %s |" % (dbName, dbCollName, recordJSON, fields, return__id)
         return self._retrieve_mongodb_records(dbName, dbCollName, recordJSON, data, returnDocuments)
 
     def _retrieve_mongodb_records(self, dbName, dbCollName, recordJSON, fields=[], returnDocuments=False):
