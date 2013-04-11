@@ -218,3 +218,17 @@ Test Suite Cleanup
     Should Not Contain    ${output}    foo
     Comment    Disconnect from MongoDB Server
     Disconnect From MongoDB
+
+Retrieve Mongodb Records With Desired Fields
+    [Tags]    regression
+    Comment    Connect to MongoDB Server
+    Connect To MongoDB    ${MDBHost}    ${MDBPort}
+    Comment    Set test data
+    ${MDBDB} =    Set Variable    users
+    ${MDBColl} =    Set Variable    account
+    ${output} =    Save MongoDB Records    ${MDBDB}    ${MDBColl}    {"firstName": "Clark", "lastName": "Kent", "address": {"streetAddress": "21 2nd Street", "city": "Metropolis"}}
+    Comment    Retrieve Mongodb Records With Desired Fields 
+    ${fields} =    Retrieve Mongodb Records With Desired Fields    ${MDBDB}    ${MDBColl}     {}   address.city    ${false}
+    Log    ${fields}
+    Should Contain    ${fields}    city
+    Should Contain    ${fields}    Metropolis

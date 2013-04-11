@@ -1,0 +1,104 @@
+20130409 21:20:29.279 | INFO  | Robot Framework 2.7.7 (Python 2.7.3 on linux2)
+20130409 21:20:29.279 | INFO  | Arguments: /home/aaltat/workspace/Robotframework-MongoDB-Library/test/acceptance
+20130409 21:20:29.279 | INFO  | Settings:
+Critical: None
+DebugFile: NONE
+Doc: None
+Exclude: []
+Include: []
+Listeners: []
+Log: NONE
+LogLevel: DEBUG
+LogTitle: None
+Metadata: []
+MonitorColors: AUTO
+MonitorMarkers: AUTO
+MonitorWidth: 78
+Name: None
+NoStatusRC: False
+NonCritical: None
+Output: output.xml
+OutputDir: /home/aaltat/workspace/Robotframework-MongoDB-Library/test/results
+RemoveKeywords: []
+Report: NONE
+ReportBackground: ('#99FF66', '#99FF66', '#FF3333')
+ReportTitle: None
+RunEmptySuite: False
+RunMode: []
+SetTag: []
+SplitLog: False
+StdErr: None
+StdOut: None
+SuiteNames: []
+SuiteStatLevel: -1
+TagDoc: []
+TagStatCombine: []
+TagStatExclude: []
+TagStatInclude: []
+TagStatLink: []
+TestNames: []
+TimestampOutputs: False
+VariableFiles: []
+Variables: []
+VisibleLogLevel: DEBUG
+WarnOnSkipped: False
+XUnitFile: NONE
+20130409 21:20:29.280 | INFO  | Parsing test data directory '/home/aaltat/workspace/Robotframework-MongoDB-Library/test/acceptance'
+20130409 21:20:29.280 | INFO  | Parsing file '/home/aaltat/workspace/Robotframework-MongoDB-Library/test/acceptance/MongoDB-Library_Tests.txt'.
+20130409 21:20:29.289 | INFO  | No debug file
+20130409 21:20:29.289 | INFO  | Initializing namespace for test suite 'Acceptance'
+20130409 21:20:29.290 | INFO  | Imported test library class 'BuiltIn' from '/usr/local/lib/python2.7/dist-packages/robot/libraries/BuiltIn.pyc'.
+20130409 21:20:29.300 | INFO  | Imported library 'BuiltIn' with arguments [ ] (version 2.7.7, class type, global scope, 88 keywords)
+20130409 21:20:29.300 | INFO  | Imported test library class 'DeprecatedBuiltIn' from '/usr/local/lib/python2.7/dist-packages/robot/libraries/DeprecatedBuiltIn.pyc'.
+20130409 21:20:29.305 | INFO  | Imported library 'DeprecatedBuiltIn' with arguments [ ] (version <unknown>, class type, global scope, 52 keywords)
+20130409 21:20:29.305 | INFO  | Imported test library class 'Reserved' from '/usr/local/lib/python2.7/dist-packages/robot/libraries/Reserved.pyc'.
+20130409 21:20:29.306 | INFO  | Imported library 'Reserved' with arguments [ ] (version <unknown>, dynamic type, global scope, 10 keywords)
+20130409 21:20:29.306 | INFO  | Imported test library module 'Easter' from '/usr/local/lib/python2.7/dist-packages/robot/libraries/Easter.pyc'.
+20130409 21:20:29.306 | INFO  | Imported library 'Easter' with arguments [ ] (version <unknown>, module type, global scope, 1 keywords)
+20130409 21:20:29.306 | INFO  | Started test suite 'Acceptance'
+20130409 21:20:29.306 | INFO  | Initializing namespace for test suite 'Acceptance.MongoDB-Library Tests'
+20130409 21:20:29.307 | INFO  | Imported test library class 'BuiltIn' from '/usr/local/lib/python2.7/dist-packages/robot/libraries/BuiltIn.pyc'.
+20130409 21:20:29.307 | INFO  | Found test library 'BuiltIn' with arguments [ ] from cache
+20130409 21:20:29.307 | INFO  | Imported test library class 'DeprecatedBuiltIn' from '/usr/local/lib/python2.7/dist-packages/robot/libraries/DeprecatedBuiltIn.pyc'.
+20130409 21:20:29.307 | INFO  | Found test library 'DeprecatedBuiltIn' with arguments [ ] from cache
+20130409 21:20:29.307 | INFO  | Imported test library class 'Reserved' from '/usr/local/lib/python2.7/dist-packages/robot/libraries/Reserved.pyc'.
+20130409 21:20:29.307 | INFO  | Found test library 'Reserved' with arguments [ ] from cache
+20130409 21:20:29.308 | INFO  | Imported test library module 'Easter' from '/usr/local/lib/python2.7/dist-packages/robot/libraries/Easter.pyc'.
+20130409 21:20:29.309 | INFO  | Found test library 'Easter' with arguments [ ] from cache
+20130409 21:20:29.321 | INFO  | Imported test library class 'MongoDBLibrary' from '/home/aaltat/workspace/Robotframework-MongoDB-Library/src/MongoDBLibrary/__init__.pyc'.
+20130409 21:20:29.324 | INFO  | Imported library 'MongoDBLibrary' with arguments [ ] (version 0.2.1, class type, global scope, 12 keywords)
+20130409 21:20:29.325 | INFO  | Started test suite 'MongoDB-Library Tests'
+20130409 21:20:29.332 | INFO  | Started test case 'Connect-Disconnect'
+20130409 21:20:29.343 | INFO  | Ended test case 'Connect-Disconnect'
+20130409 21:20:29.344 | INFO  | Started test case 'Get MongoDB Databases'
+20130409 21:20:29.351 | INFO  | Ended test case 'Get MongoDB Databases'
+20130409 21:20:29.352 | INFO  | Started test case 'Save MongoDB Records'
+20130409 21:20:29.375 | INFO  | Ended test case 'Save MongoDB Records'
+20130409 21:20:29.376 | INFO  | Started test case 'Update An Existing MongoDB Record'
+20130409 21:20:29.388 | INFO  | Ended test case 'Update An Existing MongoDB Record'
+20130409 21:20:29.389 | INFO  | Started test case 'Get MongoDB Collections'
+20130409 21:20:29.396 | INFO  | Ended test case 'Get MongoDB Collections'
+20130409 21:20:29.396 | INFO  | Started test case 'Validate MongoDB Collection'
+20130409 21:20:29.403 | INFO  | Ended test case 'Validate MongoDB Collection'
+20130409 21:20:29.403 | INFO  | Started test case 'Get MongoDB Collection Count'
+20130409 21:20:29.407 | INFO  | Ended test case 'Get MongoDB Collection Count'
+20130409 21:20:29.408 | INFO  | Started test case 'Retrieve All MongoDB Records'
+20130409 21:20:29.416 | INFO  | Ended test case 'Retrieve All MongoDB Records'
+20130409 21:20:29.417 | INFO  | Started test case 'Retrieve Some MongoDB Records'
+20130409 21:20:29.422 | INFO  | Ended test case 'Retrieve Some MongoDB Records'
+20130409 21:20:29.423 | INFO  | Started test case 'Remove MongoDB Records By id'
+20130409 21:20:29.432 | INFO  | Ended test case 'Remove MongoDB Records By id'
+20130409 21:20:29.433 | INFO  | Started test case 'Remove MongoDB Records'
+20130409 21:20:29.443 | INFO  | Ended test case 'Remove MongoDB Records'
+20130409 21:20:29.444 | INFO  | Started test case 'Drop MongoDB Collection'
+20130409 21:20:29.449 | INFO  | Ended test case 'Drop MongoDB Collection'
+20130409 21:20:29.451 | INFO  | Started test case 'Drop MongoDB Database'
+20130409 21:20:29.458 | INFO  | Ended test case 'Drop MongoDB Database'
+20130409 21:20:29.459 | INFO  | Started test case 'Test Suite Cleanup'
+20130409 21:20:29.467 | INFO  | Ended test case 'Test Suite Cleanup'
+20130409 21:20:29.467 | INFO  | Ended test suite 'MongoDB-Library Tests'
+20130409 21:20:29.467 | INFO  | Ended test suite 'Acceptance'
+20130409 21:20:29.468 | INFO  | Tests execution ended. Statistics:
+14 critical tests, 14 passed, 0 failed
+14 tests total, 14 passed, 0 failed
+20130409 21:20:29.469 | INFO  | Output: /home/aaltat/workspace/Robotframework-MongoDB-Library/test/results/output.xml

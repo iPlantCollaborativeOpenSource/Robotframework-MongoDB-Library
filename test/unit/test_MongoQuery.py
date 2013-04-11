@@ -6,6 +6,7 @@ import unittest
 import os
 import time
 import sys
+import json
 
 # Get src directory and put it in path
 # To get import forking for MongoDBLibrary
@@ -23,7 +24,11 @@ test_mongo_connection_host = 'localhost'
 test_mongo_connection_port = 51000
 test_database_name = 'test_database'
 test_collection_name = 'test_collection'
-data1 = {"firstName": "John","lastName": "Smith","age": 25,"address": {"streetAddress": "21 2nd Street","city": "New York","state": "NY","postalCode": 10021},"phoneNumbers": [{"type": "home","number": "212 555-1234"},{"type": "fax","number": "646 555-4567"}]}
+# Data for unit tests
+data1 = {"firstName": "John", "lastName": "Smith", "age": 25,"address": {"streetAddress": "21 2nd Street", "city": "New York", "state": "NY", "postalCode": 10021}, "phoneNumbers": [{"type": "home", "number": "212 555-1234"},{"type": "fax", "number": "646 555-4567"}]}
+data2 = {"firstName": "John", "lastName": "Wayne", "age": 99}
+data3 = {"firstName": "Clark", "lastName": "Kent", "age": 81}
+projection1 = '{"firstName": "John"}'
 
 from MongoDBLibrary import MongoDBLibrary
 
@@ -117,6 +122,12 @@ class TestMongoDBLibrary(unittest.TestCase):
 
     def mongo_database_names(self, db=test_database_name, collection=test_collection_name):
         return self._conn.database_names()
+
+    def mongo_find_from_collection(self, db=test_database_name, collection=test_collection_name, record='{}'):
+        data = ''
+        for item in self._collection.find(dict(json.loads(record))):
+            data = '%s%s' % (data, item.items())
+        return data
 
 
 if __name__ == '__main__':
