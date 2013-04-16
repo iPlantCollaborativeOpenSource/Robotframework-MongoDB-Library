@@ -7,7 +7,7 @@ Uses pymongo.
 
 License
 -------
-See LICENSE.txt for updated license information
+See LICENSE file for updated license information
 
 Install
 -------
