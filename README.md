@@ -6,7 +6,7 @@ A library for interacting with MongoDB from RobotFramework.
 Uses pymongo.
 
 License
-
+-------
 See LICENSE.txt for updated license information
 
 Install
