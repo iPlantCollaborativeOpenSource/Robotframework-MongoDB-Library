@@ -19,6 +19,8 @@ class MongoConnectionManager(object):
         Example usage:
         | # To connect to foo.bar.org's MongoDB service on port 27017 |
         | Connect To MongoDB | foo.bar.org | ${27017} |
+        | # For an authenticated connection you should be able to |
+        | Connect To MongoDB | admin:admin@foo.bar.org | ${27017} |
         
         """
         dbapiModuleName = 'pymongo'
