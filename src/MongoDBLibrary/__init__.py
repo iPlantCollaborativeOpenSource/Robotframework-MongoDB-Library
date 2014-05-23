@@ -19,22 +19,7 @@ class MongoDBLibrary(MongoConnectionManager, MongoQuery):
     
     
     Example Usage:
-    | # Setup |
-    | Connect to Database |
-    | # Guard assertion (verify that test started in expected state). |
-    | Check if not exists in database | select id from person where first_name = 'Franz Allan' and last_name = 'See' |
-    | # Drive UI to do some action | 
-    | Go To | http://localhost/person/form.html | | # From selenium library |
-    | Input Text |  name=first_name | Franz Allan | # From selenium library |
-    | Input Text |  name=last_name | See | # From selenium library |
-    | Click Button | Save | | # From selenium library |
-    | # Log results | 
-    | @{queryResults} | Query | select * from person |
-    | Log Many | @{queryResults} |
-    | # Verify if persisted in the database |
-    | Check if exists in database | select id from person where first_name = 'Franz Allan' and last_name = 'See' |
-    | # Teardown |
-    | Disconnect from Database | 
+    | # ToDo |
     """
     
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
