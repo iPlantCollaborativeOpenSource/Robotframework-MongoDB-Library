@@ -2,6 +2,7 @@ from mongo_connection_manager import MongoConnectionManager
 from mongoquery import MongoQuery
 from version import VERSION
 
+
 class MongoDBLibrary(MongoConnectionManager, MongoQuery):
     """
     MongoDB Library contains utilities meant for Robot Framework's usage.
@@ -24,4 +25,3 @@ class MongoDBLibrary(MongoConnectionManager, MongoQuery):
     
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = VERSION
-
