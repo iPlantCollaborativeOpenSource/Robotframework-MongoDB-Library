@@ -13,7 +13,7 @@ class MongoDBLibrary(MongoConnectionManager, MongoQuery):
     
     References:
     
-     + PyMongo 2.2 Documentation - http://api.mongodb.org/python/2.2/
+     + PyMongo 3.0.3 Documentation - http://api.mongodb.org/python/3.0.3/
      
     Notes:
     
