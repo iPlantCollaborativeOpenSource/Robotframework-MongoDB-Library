@@ -16,14 +16,10 @@ class MongoQuery(object):
         | Log Many | @{allDBs} |
         | Should Contain | ${allDBs} | DBName |
         """
-        cur = None
-        try:
-            allDBs = self._dbconnection.database_names()
-            print "| @{allDBs} | Get Mongodb Databases |"
-            return allDBs
-        finally :
-            if cur :
-                self._dbconnection.end_request() 
+        allDBs = self._dbconnection.database_names()
+        print "| @{allDBs} | Get Mongodb Databases |"
+        return allDBs
+
 
     def get_mongodb_collections(self, dbName):
         """
@@ -35,16 +31,12 @@ class MongoQuery(object):
         | Log Many | @{allCollections} |
         | Should Contain | ${allCollections} | CollName |
         """
-        db = None
-        try:
-            dbName = str(dbName)
-            db = self._dbconnection['%s' % (dbName,)]
-            allCollections = db.collection_names()
-            print "| @{allCollections} | Get MongoDB Collections | %s |" % (dbName)
-            return allCollections
-        finally :
-            if db :
-                self._dbconnection.end_request() 
+        dbName = str(dbName)
+        db = self._dbconnection['%s' % (dbName,)]
+        allCollections = db.collection_names()
+        print "| @{allCollections} | Get MongoDB Collections | %s |" % (dbName)
+        return allCollections
+
 
     def drop_mongodb_database(self, dbDelName):
         """
@@ -56,14 +48,10 @@ class MongoQuery(object):
         | @{allDBs} | Get MongoDB Collections | myDB |
         | Should Not Contain | ${allDBs} | myDB |
         """
-        cur = None
-        try:
-            dbDelName = str(dbDelName)
-            print "| Drop MongoDB Database | %s |" % (dbDelName)
-            self._dbconnection.drop_database('%s' % (dbDelName))
-        finally :
-            if cur :
-                self._dbconnection.end_request() 
+        dbDelName = str(dbDelName)
+        print "| Drop MongoDB Database | %s |" % (dbDelName)
+        self._dbconnection.drop_database('%s' % (dbDelName))
+
 
     def drop_mongodb_collection(self, dbName, dbCollName):
         """
@@ -75,15 +63,11 @@ class MongoQuery(object):
         | @{allCollections} | Get MongoDB Collections | myDB |
         | Should Not Contain | ${allCollections} | CollectionName |
         """
-        db = None
-        try:
-            dbName = str(dbName)
-            db = self._dbconnection['%s' % (dbName,)]
-            db.drop_collection('%s' % (dbCollName))
-            print "| Drop MongoDB Collection | %s | %s |" % (dbName,dbCollName)
-        finally :
-            if db :
-                self._dbconnection.end_request() 
+        dbName = str(dbName)
+        db = self._dbconnection['%s' % (dbName,)]
+        db.drop_collection('%s' % (dbCollName))
+        print "| Drop MongoDB Collection | %s | %s |" % (dbName,dbCollName)
+
 
     def validate_mongodb_collection(self, dbName, dbCollName):
         """
@@ -94,17 +78,12 @@ class MongoQuery(object):
         | ${allResults} | Validate MongoDB Collection | DBName | CollectionName |
         | Log | ${allResults} |
         """
-        db = None
-        try:
-            dbName = str(dbName)
-            dbCollName = str(dbCollName)
-            db = self._dbconnection['%s' % (dbName,)]
-            allResults = db.validate_collection('%s' % dbCollName)
-            print "| ${allResults} | Validate MongoDB Collection | %s | %s |" % (dbName,dbCollName)
-            return allResults
-        finally :
-            if db :
-                self._dbconnection.end_request() 
+        dbName = str(dbName)
+        dbCollName = str(dbCollName)
+        db = self._dbconnection['%s' % (dbName,)]
+        allResults = db.validate_collection('%s' % dbCollName)
+        print "| ${allResults} | Validate MongoDB Collection | %s | %s |" % (dbName,dbCollName)
+        return allResults
 
     def get_mongodb_collection_count(self, dbName, dbCollName):
         """
@@ -114,18 +93,13 @@ class MongoQuery(object):
         | ${allResults} | Get MongoDB Collection Count | DBName | CollectionName |
         | Log | ${allResults} |
         """
-        db = None
-        try:
-            dbName = str(dbName)
-            dbCollName = str(dbCollName)
-            db = self._dbconnection['%s' % (dbName,)]
-            coll = db['%s' % (dbCollName)]
-            count = coll.count()
-            print "| ${allResults} | Get MongoDB Collection Count | %s | %s |" % (dbName,dbCollName)
-            return count
-        finally :
-            if db :
-                self._dbconnection.end_request() 
+        dbName = str(dbName)
+        dbCollName = str(dbCollName)
+        db = self._dbconnection['%s' % (dbName,)]
+        coll = db['%s' % (dbCollName)]
+        count = coll.count()
+        print "| ${allResults} | Get MongoDB Collection Count | %s | %s |" % (dbName,dbCollName)
+        return count
 
     def save_mongodb_records(self, dbName, dbCollName, recordJSON):
         """
@@ -145,21 +119,16 @@ class MongoQuery(object):
         | ${allResults} | Save MongoDB Records | foo | bar | {"timestamp":1, "msg":"Hello 1"} |
         | Log | ${allResults} |
         """
-        db = None
-        try:
-            dbName = str(dbName)
-            dbCollName = str(dbCollName)
-            recordJSON = dict(json.loads(recordJSON))
-            if recordJSON.has_key('_id'):
-                recordJSON['_id']=ObjectId(recordJSON['_id'])
-            db = self._dbconnection['%s' % (dbName,)]
-            coll = db['%s' % (dbCollName)]
-            allResults = coll.save(recordJSON)
-            print "| ${allResults} | Save MongoDB Records | %s | %s | %s |" % (dbName,dbCollName,recordJSON)
-            return allResults
-        finally :
-            if db :
-                self._dbconnection.end_request() 
+        dbName = str(dbName)
+        dbCollName = str(dbCollName)
+        recordJSON = dict(json.loads(recordJSON))
+        if recordJSON.has_key('_id'):
+            recordJSON['_id']=ObjectId(recordJSON['_id'])
+        db = self._dbconnection['%s' % (dbName,)]
+        coll = db['%s' % (dbCollName)]
+        allResults = coll.save(recordJSON)
+        print "| ${allResults} | Save MongoDB Records | %s | %s | %s |" % (dbName,dbCollName,recordJSON)
+        return allResults
 
     def retrieve_all_mongodb_records(self, dbName, dbCollName, returnDocuments=False):
         """
@@ -260,27 +229,22 @@ class MongoQuery(object):
         return self._retrieve_mongodb_records(dbName, dbCollName, recordJSON, data, returnDocuments)
 
     def _retrieve_mongodb_records(self, dbName, dbCollName, recordJSON, fields=[], returnDocuments=False):
-        db = None
-        try:
-            dbName = str(dbName)
-            dbCollName = str(dbCollName)
-            criteria = dict(json.loads(recordJSON))
-            db = self._dbconnection['%s' % (dbName,)]
-            coll = db['%s' % (dbCollName)]
-            if fields:
-                results = coll.find(criteria, fields)
-            else:
-                results = coll.find(criteria)
-            if returnDocuments:
-                return list(results)
-            else:
-                response = ''
-                for d in results:
-                    response = '%s%s' % (response, d.items())
-                return response
-        finally :
-            if db :
-                self._dbconnection.end_request() 
+        dbName = str(dbName)
+        dbCollName = str(dbCollName)
+        criteria = dict(json.loads(recordJSON))
+        db = self._dbconnection['%s' % (dbName,)]
+        coll = db['%s' % (dbCollName)]
+        if fields:
+            results = coll.find(criteria, fields)
+        else:
+            results = coll.find(criteria)
+        if returnDocuments:
+            return list(results)
+        else:
+            response = ''
+            for d in results:
+                response = '%s%s' % (response, d.items())
+            return response
 
     def remove_mongodb_records(self, dbName, dbCollName, recordJSON):
         """
@@ -301,19 +265,14 @@ class MongoQuery(object):
         | ${output} | Retrieve All MongoDB Records | ${MDBDB} | ${MDBColl} |
         | Should Not Contain | ${output} | 'timestamp', 1 |
         """
-        db = None
-        try:
-            dbName = str(dbName)
-            dbCollName = str(dbCollName)
-            recordJSON = json.loads(recordJSON)
-            if recordJSON.has_key('_id'):
-                recordJSON['_id']=ObjectId(recordJSON['_id'])
-            db = self._dbconnection['%s' % (dbName,)]
-            coll = db['%s' % (dbCollName)]
-            allResults = coll.remove(recordJSON)
-            print "| ${allResults} | Remove MongoDB Records | %s | %s | %s |" % (dbName,dbCollName,recordJSON)
-            return allResults
-        finally :
-            if db :
-                self._dbconnection.end_request() 
+        dbName = str(dbName)
+        dbCollName = str(dbCollName)
+        recordJSON = json.loads(recordJSON)
+        if recordJSON.has_key('_id'):
+            recordJSON['_id']=ObjectId(recordJSON['_id'])
+        db = self._dbconnection['%s' % (dbName,)]
+        coll = db['%s' % (dbCollName)]
+        allResults = coll.remove(recordJSON)
+        print "| ${allResults} | Remove MongoDB Records | %s | %s | %s |" % (dbName,dbCollName,recordJSON)
+        return allResults
 

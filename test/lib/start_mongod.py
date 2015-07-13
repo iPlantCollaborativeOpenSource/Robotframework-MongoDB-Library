@@ -1,5 +1,4 @@
 import time
-import atexit
 import shutil
 import tempfile
 import subprocess
@@ -33,7 +32,7 @@ class MongoTemporaryInstance():
             time.sleep(0.1)
             try:
                 print i
-                self._conn = pymongo.Connection('localhost', self._mongodb_port)
+                self._conn = pymongo.MongoClient('localhost', self._mongodb_port)
             except pymongo.errors.ConnectionFailure:
                 continue
             else:
