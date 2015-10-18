@@ -15,12 +15,12 @@ class MongoDBLibrary(MongoConnectionManager, MongoQuery):
     
      + PyMongo 3.0.3 Documentation - http://api.mongodb.org/python/3.0.3/
      
-    Notes:
-    
-    
-    
     Example Usage:
-    | # ToDo |
+        | Connect To MongoDB | foo.bar.org | ${27017} |
+        | ${QueryJSON}  | Set Variable | {"name" : "username" ,"in_use": false} |
+        | ${UpdateJSON} | Set Variable | {"$set": {"in_use" : true}} |
+        | &{allResults} | Retrieve and Update One Mongodb Record | DBName | CollectionName | ${QueryJSON} | ${UpdateJSON} |
+        | Log | ${allResults} |
     """
     
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
