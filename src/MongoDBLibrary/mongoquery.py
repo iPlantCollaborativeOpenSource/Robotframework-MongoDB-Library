@@ -38,7 +38,7 @@ class MongoQuery(object):
         except TypeError:
             self._builtin.fail("Connection failed, please make sure you have run 'Connect To Mongodb' first.")
         allCollections = db.collection_names()
-        print "| @{allCollections} | Get MongoDB Collections | %s |" % (dbName)
+        print "| @{allCollections} | Get MongoDB Collections | %s |" % dbName
         return allCollections
 
     def drop_mongodb_database(self, dbDelName):
@@ -52,9 +52,9 @@ class MongoQuery(object):
         | Should Not Contain | ${allDBs} | myDB |
         """
         dbDelName = str(dbDelName)
-        print "| Drop MongoDB Database | %s |" % (dbDelName)
+        print "| Drop MongoDB Database | %s |" % dbDelName
         try:
-            self._dbconnection.drop_database('%s' % (dbDelName))
+            self._dbconnection.drop_database('%s' % dbDelName)
         except TypeError:
             self._builtin.fail("Connection failed, please make sure you have run 'Connect To Mongodb' first.")
 
@@ -73,7 +73,7 @@ class MongoQuery(object):
             db = self._dbconnection['%s' % (dbName,)]
         except TypeError:
             self._builtin.fail("Connection failed, please make sure you have run 'Connect To Mongodb' first.")
-        db.drop_collection('%s' % (dbCollName))
+        db.drop_collection('%s' % dbCollName)
         print "| Drop MongoDB Collection | %s | %s |" % (dbName, dbCollName)
 
     def validate_mongodb_collection(self, dbName, dbCollName):
@@ -109,7 +109,7 @@ class MongoQuery(object):
             db = self._dbconnection['%s' % (dbName,)]
         except TypeError:
             self._builtin.fail("Connection failed, please make sure you have run 'Connect To Mongodb' first.")
-        coll = db['%s' % (dbCollName)]
+        coll = db['%s' % dbCollName]
         count = coll.count()
         print "| ${allResults} | Get MongoDB Collection Count | %s | %s |" % (dbName, dbCollName)
         return count
@@ -135,16 +135,44 @@ class MongoQuery(object):
         dbName = str(dbName)
         dbCollName = str(dbCollName)
         recordJSON = dict(json.loads(recordJSON))
-        if recordJSON.has_key('_id'):
+        if '_id' in recordJSON:
             recordJSON['_id'] = ObjectId(recordJSON['_id'])
         try:
             db = self._dbconnection['%s' % (dbName,)]
         except TypeError:
             self._builtin.fail("Connection failed, please make sure you have run 'Connect To Mongodb' first.")
-        coll = db['%s' % (dbCollName)]
+        coll = db['%s' % dbCollName]
         allResults = coll.save(recordJSON)
         print "| ${allResults} | Save MongoDB Records | %s | %s | %s |" % (dbName, dbCollName, recordJSON)
         return allResults
+
+    def update_many_mongodb_records(self, dbName, dbCollName, queryJSON, updateJSON, upsert=False):
+        """
+        Update many MongoDB records at ones based on the given query string and
+        return number of modified documents.
+
+        Usage is:
+        | ${QueryJSON}  | Set Variable | {"type" : "basic_user" ,"in_use": false} |
+        | ${UpdateJSON} | Set Variable | {"$set": {"in_use" : true}} |
+        | &{allResults} | Update Many Mongodb Records | DBName | CollectionName | ${QueryJSON} | ${UpdateJSON} |
+        | Log | ${allResults} |
+        """
+        db_name = str(dbName)
+        collection_name = str(dbCollName)
+        query_json = json.loads(queryJSON)
+        update_json = json.loads(updateJSON)
+        if '_id' in query_json:
+            query_json['_id'] = ObjectId(queryJSON['_id'])
+        try:
+            db = self._dbconnection['%s' % (db_name,)]
+        except TypeError:
+            self._builtin.fail("Connection failed, please make sure you have run 'Connect To Mongodb' first.")
+        coll = db['%s' % collection_name]
+        allResults = coll.update_many(query_json, update_json, upsert=upsert)
+        print "Matched: %i documents" % allResults.matched_count
+        print "| ${allResults} | Update Many MongoDB Records | %s | %s | %s | %s |" % (
+            dbName, dbCollName, query_json, update_json)
+        return allResults.modified_count
 
     def retrieve_all_mongodb_records(self, dbName, dbCollName, returnDocuments=False):
         """
@@ -157,7 +185,7 @@ class MongoQuery(object):
         | Log | ${allResults} |
         | Should Contain X Times | ${allResults} | '${recordNo1}' | 1 |
         """
-        return self._retrieve_mongodb_records(dbName, dbCollName, '{}', returnDocuments)
+        return self._retrieve_mongodb_records(dbName, dbCollName, '{}', returnDocuments=returnDocuments)
 
     def retrieve_some_mongodb_records(self, dbName, dbCollName, recordJSON, returnDocuments=False):
         """
@@ -172,14 +200,14 @@ class MongoQuery(object):
         | Should Contain X Times | ${allResults} | '${recordNo1}' | 1 |
         """
         print "| ${allResults} | Retrieve Some MongoDB Records | %s | %s | %s |" % (dbName, dbCollName, recordJSON)
-        return self._retrieve_mongodb_records(dbName, dbCollName, recordJSON, returnDocuments)
+        return self._retrieve_mongodb_records(dbName, dbCollName, recordJSON, returnDocuments=returnDocuments)
 
     def retrieve_and_update_one_mongodb_record(self, dbName, dbCollName, queryJSON, updateJSON,
                                                returnBeforeDocument=False):
         """
         Retrieve and update one record from a given MongoDB database collection
-        based on the JSON entered. Return format is robot dictionary.
-        `returnBeforeDocument` if return document should be before or after the update, default is `False`.
+        based on the JSON query string. Return format is robot dictionary.
+        ``returnBeforeDocument`` if return document should be before or after the update, default is ``False``.
 
         Usage is:
         | ${QueryJSON}  | Set Variable | {"type" : "basic_user" ,"in_use": false} |
@@ -192,7 +220,7 @@ class MongoQuery(object):
         record_json = dict(json.loads(queryJSON))
         update_json = dict(json.loads(updateJSON))
         document_to_return = ReturnDocument.BEFORE if returnBeforeDocument is True else ReturnDocument.AFTER
-        if record_json.has_key('_id'):
+        if '_id' in record_json:
             record_json['_id'] = ObjectId(record_json['_id'])
         try:
             db = self._dbconnection['%s' % (dbname,)]
@@ -200,11 +228,12 @@ class MongoQuery(object):
             self._builtin.fail("Connection failed, please make sure you have run 'Connect To Mongodb' first.")
         coll = db['%s' % dbcollname]
         all_results = coll.find_one_and_update(record_json, update_json, return_document=document_to_return)
-        print "| ${allResults} | Retrieve And Update One Mongodb Record | %s | %s | %s | %s | %s" % (dbname,
-                                                                                                     dbcollname,
-                                                                                                     queryJSON,
-                                                                                                     updateJSON,
-                                                                                                     returnBeforeDocument)
+        print "| ${allResults} | Retrieve And Update One Mongodb Record | %s | %s | %s | %s | %s" % (
+            dbname,
+            dbcollname,
+            queryJSON,
+            updateJSON,
+            returnBeforeDocument)
         return all_results
 
     def retrieve_mongodb_records_with_desired_fields(self, dbName, dbCollName, recordJSON, fields, return__id=True,
@@ -218,7 +247,7 @@ class MongoQuery(object):
         In Mongodb terms would correspond: db.collection.find({ }, { fieldA: 1, fieldB: 1 })
 
         For usage of the dbName, dbCollName and recordJSON arguments, see the keyword
-        `Retrieve Some Mongodb Records` documentation.
+        ``Retrieve Some Mongodb Records`` documentation.
 
         fields argument control what field(s) are returned from the document(s),
         it is a comma separated string of fields. It is also possible to return fields
@@ -239,11 +268,11 @@ class MongoQuery(object):
         | ${address_city_and_streetAddress} | Retrieve MongoDB Records With Desired Fields | account | users | {} | address.city, address.streetAddress | False |
         | ${_id} | Retrieve MongoDB Records With Desired Fields | account | users | {} | firstName | True |
         =>
-        | ${firstName} = [(u'firstName', u'Clark')]
-        | ${address} = [(u'address', {u'city': u'Metropolis', u'streetAddress': u'21 2nd Street'})]
-        | ${address_city} = [(u'address', {u'city': u'Metropolis'})]
-        | ${address_city_and_streetAddress} = [(u'address', {u'city': u'Metropolis', u'streetAddress': u'21 2nd Street'})] # Same as retrieving only address
-        | ${_id} = [(u'_id', ObjectId('...')), (u'firstName', u'Clark')]
+        | ${firstName} = [(u'firstName', u'Clark')] |
+        | ${address} = [(u'address', {u'city': u'Metropolis', u'streetAddress': u'21 2nd Street'})] |
+        | ${address_city} = [(u'address', {u'city': u'Metropolis'})] |
+        | ${address_city_and_streetAddress} = [(u'address', {u'city': u'Metropolis', u'streetAddress': u'21 2nd Street'})] # Same as retrieving only address |
+        | ${_id} = [(u'_id', ObjectId('...')), (u'firstName', u'Clark')] |
 
         """
         # Convert return__id to boolean value because Robot Framework returns False/True as Unicode
@@ -271,7 +300,7 @@ class MongoQuery(object):
             elif not return__id:
                 data['_id'] = False
             else:
-                raise Exception('Not a boolean value for return__id: s%') % (return__id)
+                raise Exception('Not a boolean value for return__id: %s' % return__id)
         else:
             data = []
 
@@ -287,7 +316,7 @@ class MongoQuery(object):
             db = self._dbconnection['%s' % (dbName,)]
         except TypeError:
             self._builtin.fail("Connection failed, please make sure you have run 'Connect To Mongodb' first.")
-        coll = db['%s' % (dbCollName)]
+        coll = db['%s' % dbCollName]
         if fields:
             results = coll.find(criteria, fields)
         else:
@@ -322,13 +351,13 @@ class MongoQuery(object):
         dbName = str(dbName)
         dbCollName = str(dbCollName)
         recordJSON = json.loads(recordJSON)
-        if recordJSON.has_key('_id'):
+        if '_id' in recordJSON:
             recordJSON['_id'] = ObjectId(recordJSON['_id'])
         try:
             db = self._dbconnection['%s' % (dbName,)]
         except TypeError:
             self._builtin.fail("Connection failed, please make sure you have run 'Connect To Mongodb' first.")
-        coll = db['%s' % (dbCollName)]
+        coll = db['%s' % dbCollName]
         allResults = coll.remove(recordJSON)
         print "| ${allResults} | Remove MongoDB Records | %s | %s | %s |" % (dbName, dbCollName, recordJSON)
         return allResults
