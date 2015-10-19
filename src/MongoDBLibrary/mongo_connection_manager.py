@@ -1,3 +1,4 @@
+from robot.libraries.BuiltIn import BuiltIn
 
 
 class MongoConnectionManager(object):
@@ -10,7 +11,9 @@ class MongoConnectionManager(object):
         Initializes _dbconnection to None.
         """
         self._dbconnection = None
-        
+        self._builtin = BuiltIn()
+
+
     def connect_to_mongodb(self, dbHost='localhost', dbPort=27017, dbMaxPoolSize=10, dbNetworkTimeout=None,
                            dbDocClass=dict, dbTZAware=False):
         """
