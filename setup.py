@@ -15,8 +15,8 @@ def main():
           version      = VERSION,
           description  = 'Mongo Database utility library for Robot Framework',
           author       = 'Jerry Schneider',
-          author_email = 'jerry@iplantcollaborative.org',
-          url          = 'https://github.com/',
+          author_email = 'jerry@cyverse.org',
+          url          = 'https://github.com/iPlantCollaborativeOpenSource/Robotframework-MongoDB-Library',
           package_dir  = { '' : 'src'},
           packages     = ['MongoDBLibrary']
           )
